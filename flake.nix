@@ -30,9 +30,14 @@
        url = "github:sodiboo/niri-flake";
        inputs.nixpkgs.follows = "nixpkgs";
      };
+
+     quickshell = {
+       url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+       inputs.nixpkgs.follows = "nixpkgs"; # Ensure it uses you
+     };
 };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, quickshell, ... }@inputs: {
     # use "nixos", or your hostname as the name of the configuration
     # it's a better practice than "default" shown in the video
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {

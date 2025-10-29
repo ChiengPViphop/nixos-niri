@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix
     ];
 
 
@@ -27,6 +27,8 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  hardware.bluetooth.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Phnom_Penh";
@@ -46,6 +48,12 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  services.xserver.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
+  virtualisation.waydroid.enable = true;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -61,7 +69,8 @@
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
-
+  programs.xwayland.enable = true;
+  
   # Enable automatic login for the user.
   services.getty.autologinUser = "phouvongviphop";
 
@@ -74,14 +83,20 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     git
-    alacritty
     fuzzel
     neovim
     kitty
     greetd
     epson-201401w
     firefoxpwa
-  ];
+    nautilus
+    nautilus-python
+    nautilus-open-in-blackbox
+    nautilus-open-any-terminal
+    sushi
+    turtle
+    quickshell
+];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
@@ -94,19 +109,21 @@
   };
 
   programs.niri.enable = true;  
+  programs.hyprland.enable = true;
 
-  
-  services.greetd = {
+  programs.nautilus-open-any-terminal = {
     enable = true;
-    settings = rec {
-      initial_session = {
-        command = "niri";
-        user = "phouvongviphop";
-      };
-      default_session = initial_session;
-    };
+    terminal = "kitty";
   };
+  
 
+  networking.firewall.enable = true;
+  networking.nftables.enable = false;
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+  };
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
